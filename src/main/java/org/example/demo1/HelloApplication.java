@@ -1,6 +1,7 @@
 package org.example.demo1;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,17 +25,9 @@ public class HelloApplication extends Application {
         stage.show();
 
         Timer timer = new Timer();
-        Thread thread = new Thread(() -> {
-            while (true) {
-                label.setText(String.valueOf(timer.getTime()));
-                try {
-                    wait(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        thread.start();
+        timer.addObserver(
+                (tmr) -> Platform.runLater(() -> label.setText(String.valueOf(tmr.getTime())))
+                         );
     }
 
     public static void main(String[] args) {
